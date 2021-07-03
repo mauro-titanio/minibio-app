@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
       author: this.user.uid,
       label: ['', Validators.required],
       link_url: ['', [Validators.required, Validators.pattern(reg)]],
-      active: [true, Validators.required]
+      active: true
     }))
     console.log(this.linksForm)
     this.createLink()

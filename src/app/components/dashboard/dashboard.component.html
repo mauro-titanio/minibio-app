@@ -5,8 +5,7 @@
             <div class="dropdown">
                 <img width="60px" class="rounded-circle border border-2 border-secondary profile-img mx-5" data-bs-toggle="dropdown" aria-expanded="false" src="{{user.photoURL}}" alt="User profile image">
                 <ul class="dropdown-menu bg-glass mt-2" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item text-secondary" href="#">Perfil</a></li>
-                    <li><a class="dropdown-item text-secondary" href="#">Another action</a></li>
+                    <li><a class="dropdown-item text-secondary">Perfil</a></li>
                     <li><a class="dropdown-item text-danger" (click)="logout()">Logout</a></li>
                 </ul>
             </div>
@@ -28,20 +27,20 @@
                                             <div class="row">
                                                 <div class="col-8">
                                                     <div class="form-floating mb-3">
-                                                        <input formControlName="i.label" type="text" class="form-control" id="floatingInput" placeholder="placeholder">
+                                                        <input formControlName="linksForm[i].label" type="text" class="form-control" id="floatingInput" placeholder="placeholder">
                                                         <label for="floatingInput "><i class="bi bi-pencil text-muted mx-2 "></i></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-4 ">
-                                                    <div class="form-check form-switch ">
-                                                        <input checked formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3 border border-1 border-primary " type="checkbox ">
+                                                    <div class="form-check form-switch">
+                                                        <input checked formControlName="linksForm[i].active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row ">
                                                 <div class="col-8 ">
                                                     <div class="form-floating ">
-                                                        <input formControlName="link_url " type="url " class="form-control " id="floatingPassword " placeholder="Enlace ">
+                                                        <input formControlName="linksForm[i].link_url" type="url " class="form-control " id="floatingPassword " placeholder="Enlace ">
                                                         <label for="floatingPassword "> <i class="bi bi-pencil text-muted mx-2 "></i></label>
                                                     </div>
                                                 </div>
