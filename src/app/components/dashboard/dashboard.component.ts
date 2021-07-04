@@ -15,6 +15,10 @@ import { LinksCrudService } from 'src/app/shared/services/crud/links-crud.servic
 })
 export class DashboardComponent implements OnInit {
 
+
+
+
+
   user: any
   userLinks: Array<Link> = []
   form = this.fb.group({
@@ -84,7 +88,9 @@ export class DashboardComponent implements OnInit {
           userLink.id = doc.id
           this.userLinks.push(userLink)
           //Tengo que arreglar algo: cuando imprimo los "userLinks" hay muchos arrays, será por el forEach
+
           console.log(this.userLinks)
+          console.log(this.form)
         })
       })
     }, 50);
