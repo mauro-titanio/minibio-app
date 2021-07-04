@@ -83,7 +83,6 @@ export class DashboardComponent implements OnInit {
           let userLink: Link = doc.data()
           userLink.id = doc.id
           this.userLinks.push(userLink)
-        
           //Tengo que arreglar algo: cuando imprimo los "userLinks" hay muchos arrays, será por el forEach
           console.log(this.userLinks)
         })
