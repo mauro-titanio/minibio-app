@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit {
   }
 
   
-
+//Crear un nuevo formgroup en el form array
   addLink() {
     const reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
     this.linksForm.push(this.fb.control({
@@ -54,14 +54,25 @@ export class DashboardComponent implements OnInit {
     this.createLink()
   }
 
-  get f() {
-    return this.form.controls
+ 
+//Crear un nuevo enlace
+  createLink(): void {
+    const link: Link = {
+      id: '',
+      author: '',
+      label: '',
+      link_url: '',
+      active: false,
+    }
+    this.crudLinks.newLink(link, this.user.uid).then(success => {
+      console.log("Post creado", success)
+    }).catch(error => {
+      console.log("Error", error)
+    })
+    this.readAllLinks()
   }
 
 
-  logout() {
-    this.authService.signOut()
-  }
 
 
   readAllLinks() {
@@ -78,21 +89,6 @@ export class DashboardComponent implements OnInit {
     }, 150);
   }
 
-  createLink(): void {
-    const link: Link = {
-      id: '',
-      author: '',
-      label: '',
-      link_url: '',
-      active: false,
-    }
-    this.crudLinks.newLink(link, this.user.uid).then(success => {
-      console.log("Post creado", success)
-    }).catch(error => {
-      console.log("Error", error)
-    })
-    this.readAllLinks()
-  }
 
 
 
@@ -123,11 +119,15 @@ export class DashboardComponent implements OnInit {
     this.readAllLinks()
   }
 
+  get f() {
+    return this.form.controls
+  }
 
 
 
-
-
+  logout() {
+    this.authService.signOut()
+  }
 
 
 
