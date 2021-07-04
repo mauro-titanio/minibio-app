@@ -2,3 +2,16 @@
     transition: 500ms ease;
     opacity: 0.5 !important;
 }
+
+.bg-phone {
+    background-image: url('https://i.imgur.com/OCmQ4nH.png');
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: contain;
+    max-width: 250px;
+    overflow: hidden;
+}
+
+.overflow-hidden {
+    overflow: hidden !important;
+}
