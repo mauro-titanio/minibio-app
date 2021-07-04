@@ -15,65 +15,88 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card bg-glass py-2">
-                    <div class="card-body">
-                        <form [formGroup]="form">
-                            <div class="container text-center py-3">
-                                <button (click)="addLink()" class="btn btn-primary big-btn w-100 py-3 shadow-sm"><i class="bi bi-plus-circle mx-2 align-middle"></i>Añadir nuevo enlace</button>
-                            </div>
-
-
-                            <!-- ?????? -->
-                            <div class="container" formArrayName="linksForm">
-                                <div *ngFor="let item of linksForm.controls; let i=index">
-                                    <div class="card mb-4 shadow-sm" [formGroupName]="i">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-8">
-                                                    <div class="form-floating mb-3">
-                                                        <input formControlName="" type="text" class="form-control" id="floatingInput" placeholder="placeholder">
-                                                        <label for="floatingInput "><i class="bi bi-pencil text-muted mx-2 "></i></label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4 ">
-                                                    <div class="form-check form-switch">
-                                                        <input checked formControlName="" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row ">
-                                                <div class="col-8 ">
-                                                    <div class="form-floating ">
-                                                        <input formControlName="" type="url " class="form-control " id="floatingPassword " placeholder="Enlace ">
-                                                        <label for="floatingPassword "> <i class="bi bi-pencil text-muted mx-2 "></i></label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4 ">
-                                                    <div class="container ">
-                                                        <i class="bi bi-trash position-absolute bottom-0 end-0 m-3 text-muted "></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div class="container text-center py-3">
+                        <button class="btn btn-primary big-btn w-100 py-3 shadow-sm" (click)="createLink()"><i class="bi bi-plus-circle mx-2 align-middle"></i>Añadir nuevo enlace</button>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card mb-3" *ngFor="let link of userLinks">
+                                <div class="card-body text-center">
+                                    <h5>
+                                        {{link.label}}
+                                    </h5>
+                                    <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="getLink(link.id)">log me</button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
+
                 </div>
             </div>
             <!--Vista previa de los enlace (añadir movil)   iframe o componente-->
             <div class="col-lg-4">
-                <div class="card mb-3" *ngFor="let link of userLinks">
-                    <div class="card-body text-center" (click)="deleteLink(link.id)">
-                        <h5>
-                            {{link.label}}
-                        </h5>
-                    </div>
-                </div>
+                Espacio para vista previa
             </div>
         </div>
     </div>
 </div>
 
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="floatingInput" placeholder="placeholder">
+                                            <label for="floatingInput ">{{userLink.label}}<i class="bi bi-pencil text-muted mx-2 "></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 ">
+                                        <div class="form-check form-switch">
+                                            <input checked class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-8 ">
+                                        <div class="form-floating ">
+                                            <input type="url " class="form-control " id="floatingPassword " placeholder="Enlace ">
+                                            <label for="floatingPassword "> <i class="bi bi-pencil text-muted mx-2 "></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 ">
+                                        <div class="container ">
+                                            <i class="bi bi-trash position-absolute bottom-0 end-0 m-3 text-muted "></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!--(focusout)="updateLink(item.id)"-->

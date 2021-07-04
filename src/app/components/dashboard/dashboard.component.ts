@@ -1,7 +1,9 @@
 import { formatCurrency } from '@angular/common';
+import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+
 import { Observable } from 'rxjs';
 import { Link } from 'src/app/shared/models/link';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
@@ -21,9 +23,16 @@ export class DashboardComponent implements OnInit {
 
   user: any
   userLinks: Array<Link> = []
-  form = this.fb.group({
-    linksForm: this.fb.array([])
-  })
+  userLink: Link = {
+    id: '',
+    author: '',
+    label: '',
+    link_url: '',
+    active: false,
+  }
+  form = this.fb.group({})
+
+
 
   get linksForm() {
     return this.form.get('linksForm') as FormArray
@@ -34,32 +43,22 @@ export class DashboardComponent implements OnInit {
     private fire: AngularFirestore,
     private crudLinks: LinksCrudService,
     private fb: FormBuilder) {
-    this.readAllLinks()
+      this.readAllLinks()
   }
 
 
   ngOnInit(): void {
     this.user = this.authService.userData()
     console.log(this.user)
-  }
-
   
-//Crear un nuevo formgroup en el form array
-  addLink() {
-    const reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
-    this.linksForm.push(this.fb.control({
-      id: '',
-      author: this.user.uid,
-      label: ['', Validators.required],
-      link_url: ['', [Validators.required, Validators.pattern(reg)]],
-      active: true
-    }))
-    console.log(this.linksForm)
-    this.createLink()
   }
 
- 
-//Crear un nuevo
+
+  //Crear un nuevo formgroup en el form array
+
+
+
+  //Crear un nuevo
   createLink(): void {
     const link: Link = {
       id: '',
@@ -88,12 +87,20 @@ export class DashboardComponent implements OnInit {
           userLink.id = doc.id
           this.userLinks.push(userLink)
           //Tengo que arreglar algo: cuando imprimo los "userLinks" hay muchos arrays, será por el forEach
-
           console.log(this.userLinks)
-          console.log(this.form)
         })
       })
-    }, 50);
+    }, 150);
+  }
+
+
+  getLink(id: string) {
+ //////FILTER?
+
+    this.crudLinks.getLink(this.user.uid, id).subscribe((data:any)=>{
+      this.userLink = data.data()
+      console.log(this.userLink)
+    })
   }
 
 
@@ -129,6 +136,8 @@ export class DashboardComponent implements OnInit {
   get f() {
     return this.form.controls
   }
+
+
 
 
 

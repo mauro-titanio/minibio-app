@@ -25,8 +25,8 @@ readAllLinks(userID: string){
   return this.fireStore.collection('users').doc(userID).collection('user_links').get()
 }
 //Leer un link en especifico
-getLink(id:string){
-  return this.fireStore.collection('users/${user.uid}/user_links').doc(id).get()
+getLink(id:string,linkID: string ){
+  return this.fireStore.collection('users').doc(id).collection('user_links').doc(linkID).get()
 }
 //Modificar un link
 updateLink(userID:string, data:Link, linkID: string){
