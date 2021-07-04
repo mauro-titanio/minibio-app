@@ -20,6 +20,9 @@
                             <div class="container text-center py-3">
                                 <button (click)="createLink()" class="btn btn-primary big-btn w-100 py-3 shadow-sm"><i class="bi bi-plus-circle mx-2 align-middle"></i>Añadir nuevo enlace</button>
                             </div>
+
+
+                            <!-- ?????? -->
                             <div class="container" formArrayName="linksForm">
                                 <div *ngFor="let item of linksForm.controls; let i=index">
                                     <div class="card mb-4 shadow-sm" [formGroupName]="i">
@@ -58,6 +61,7 @@
                     </div>
                 </div>
             </div>
+            <!--Vista previa de los enlace (añadir movil)-->
             <div class="col-lg-4">
                 <div class="card mb-3" *ngFor="let link of userLinks">
                     <div class="card-body text-center">
