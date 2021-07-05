@@ -16,9 +16,6 @@ import { LinksCrudService } from 'src/app/shared/services/crud/links-crud.servic
 })
 export class DashboardComponent implements OnInit {
 
-
-
-
   formLink: FormGroup
   user: any
   userLinks: Array<Link> = []
@@ -27,34 +24,25 @@ export class DashboardComponent implements OnInit {
     author: '',
     label: '',
     link_url: '',
-    active: '',
+    active: true,
     date: 0,
   }
   pageLoaded = false
 
-  reg = '(https?://)?([\da-z.-]+)\.([a-z.]{2,6})[/\w .-]*/?';
-
-   
-
-
 
 
   constructor(private authService: AuthService,
-    private fire: AngularFirestore,
     private crudLinks: LinksCrudService,
     private fb: FormBuilder,
-    private readonly notifier: NotifierService) {
+    private notifier: NotifierService) {
 
-    
+    const   reg = '(https?://)?([\da-z.-]+)\.([a-z.]{2,6})[/\w .-]*/?';
     this.formLink = this.fb.group({
       label: ['', Validators.required, Validators.minLength(3), Validators.maxLength(30)],
-      link_url: ['', [Validators.required, Validators.pattern(this.reg)]],
-      active: ['']
+      link_url: ['', [Validators.required, Validators.pattern(reg)]],
+      active: [true]
     })
     
-  }
-  get f() {
-    return this.formLink.controls
   }
 
 
@@ -66,46 +54,39 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       this.pageLoaded = true
     }, 3000);
+  }
 
 
+  get f() {
+    return this.formLink.controls
   }
 
 
 
-
-
-
-  //Crear un nuevo
   createLink(): void {
     const link: Link = {
       id: '',
       author: this.user.uid,
       label: this.f.label.value,
       link_url: this.f.link_url.value,
-      active: 'active',
+      active: true,
       date: new Date().getTime()
     }
     
     if (this.formLink.invalid) {
       console.log("error!")
       this.notifier.notify('error', 'El enlace no es válido');
-    
       return
-    } else {
+    }
       this.crudLinks.newLink(link, this.user.uid).then(success => {
         console.log("Post creado", success)
         this.notifier.notify('success', 'Enlace creado');
-        
         this.readAllLinks()
-        
-      
       }).catch(error => {
         console.log("Error", error)
         this.notifier.notify('error', 'Ha habido un error en el servidor');
       })
-    }
   }
-
 
 
 
@@ -119,13 +100,12 @@ export class DashboardComponent implements OnInit {
           this.userLinks.push(userLink)
           this.userLinks.sort(function (a, b) {
             return b.date - a.date;
-
           });
         })
       })
     }, 50);
-
   }
+
 
 
   getLink(id: string) {
@@ -136,7 +116,6 @@ export class DashboardComponent implements OnInit {
       console.log(this.userLink)
     })
   }
-
 
 
 
@@ -152,8 +131,8 @@ export class DashboardComponent implements OnInit {
   }
 
 
+//Hay un error en el update
   updateLink(id: string) {
-    console.log('funciona?')
     const link: Link = {
       id: id,
       author: this.user.uid,
@@ -163,22 +142,19 @@ export class DashboardComponent implements OnInit {
       date: new Date().getTime(),
     }
     if (this.formLink.invalid) {
+      this.notifier.notify('error', 'No se ha podido actualizar');
       console.log("error!")
       return
-    } else {
+    } 
       this.crudLinks.updateLink(this.user.uid, link, id).then(success => {
         this.notifier.notify('success', 'Enlace actualizado');
         console.log("Post creado", success)
         this.readAllLinks()
       }).catch(error => {
-        console.log("Error", error)
         this.notifier.notify('error', 'Ha habido un error en el servidor');
+        console.log("Error", error)
       })
-    }
   }
-
-
-
 
 
 

@@ -3,6 +3,6 @@ export interface Link {
     author: string;
     label: string;
     link_url: string;
-    active: string;
+    active: boolean;
     date: number
 }

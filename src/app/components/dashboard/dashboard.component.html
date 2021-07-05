@@ -1,19 +1,23 @@
 <div class="bg-colored-img">
+    <!--NAV-->
     <nav class="navbar navbar-light bg-primary text-secondary">
         <div class="container-fluid">
             <h5 class="p-3">Hola {{user.displayName}}</h5>
             <div class="dropdown">
-                <img width="60px" class="rounded-circle border border-2 border-secondary profile-img mx-5" data-bs-toggle="dropdown" aria-expanded="false" src="{{user.photoURL}}" alt="User profile image">
+                <img width="60px" class="rounded-circle border border-2 border-secondary profile-img mx-5" data-bs-toggle="dropdown" aria-expanded="false" src="{{ user.photoURL }}" alt="User profile image" />
                 <ul class="dropdown-menu bg-glass mt-2" aria-labelledby="dropdownMenuButton1">
                     <li><a class="dropdown-item text-secondary">Perfil</a></li>
-                    <li><a class="dropdown-item text-danger" (click)="logout()">Logout</a></li>
+                    <li>
+                        <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!--LINKS CONTAINER-->
     <div class="row justify-content-center align-content-center vh-70" *ngIf="!pageLoaded">
-        <div class="spinner-border text-primary mb-2" role="status">
-        </div>
+        <div class="spinner-border text-primary mb-2" role="status"></div>
         <p class="text-center">Loading...</p>
     </div>
     <div class="container py-5">
@@ -21,28 +25,28 @@
             <div class="col-lg-6">
                 <div class="card bg-glass py-2 links-card">
                     <div class="container text-center py-3 px-5 mb-3">
-                        <button class="btn btn-primary big-btn w-100 py-3  shadow-sm" data-bs-toggle="modal" data-bs-target="#createLinkModal"><i class="bi bi-plus-circle mx-2 align-middle"></i>Añadir nuevo enlace</button>
+                        <button class="btn btn-primary big-btn w-100 py-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#createLinkModal"><i class="bi bi-plus-circle mx-2 align-middle"></i>Añadir nuevo enlace</button>
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-lg-10">
                             <div class="card mb-4 shadow-sm" *ngFor="let link of userLinks">
-                                <div class="card-body">
+                                <div class="card-body" [ngClass]="{ 'muted-card': !link.active }">
                                     <div class="row">
                                         <div class="col-8">
                                             <h5>{{link.label}}</h5>
                                         </div>
                                     </div>
-                                    <div class="col-4 ">
-                                        <div class="container ">
+                                    <div class="col-4">
+                                        <div class="container">
                                             <i class="bi bi-pencil position-absolute top-0 end-0 m-3 text-muted pointer" (click)="getLink(link.id)" data-bs-toggle="modal" data-bs-target="#modifyModal"></i>
                                         </div>
                                     </div>
-                                    <div class="row ">
-                                        <div class="col-8 ">
+                                    <div class="row">
+                                        <div class="col-8">
                                             <p class="text-muted">{{link.link_url}}</p>
                                         </div>
-                                        <div class="col-4 ">
-                                            <div class="container ">
+                                        <div class="col-4">
+                                            <div class="container">
                                                 <i class="bi bi-trash position-absolute bottom-0 end-0 m-3 text-muted pointer" data-bs-toggle="modal" data-bs-target="#eliminarModal" (click)="getLink(link.id)"></i>
                                             </div>
                                         </div>
@@ -51,25 +55,17 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <!--Vista previa de los enlace (añadir movil)   iframe o componente-->
-            <div class="col-lg-4">
-                Espacio para vista previa
-            </div>
+            <div class="col-lg-4">Espacio para vista previa</div>
         </div>
     </div>
 </div>
 
-
-
-
-
-
-<!-- Modal -->
+<!-- MODALS-->
 <!--Modify Link Modal-->
-<div class="modal fade " id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form [formGroup]="formLink">
@@ -84,27 +80,26 @@
                                 <div class="row">
                                     <div class="col-8">
                                         <div class="form-floating mb-3">
-                                            <input formControlName="label" type="text" class="form-control" id="floatingInput" placeholder="placeholder" autocomplete="off">
-                                            <label for="floatingInput ">{{userLink.label}}<i class="bi bi-pencil text-muted mx-2 "></i></label>
+                                            <input formControlName="label" type="text" class="form-control" id="floatingInput" placeholder="placeholder" autocomplete="off" value="{{ userLink.label }}" />
+                                            <label for="floatingInput ">{{userLink.label}}<i class="bi bi-pencil text-muted mx-2"></i></label>
                                         </div>
                                     </div>
-                                    <div class="col-4 ">
+                                    <div class="col-4">
                                         <div class="form-check form-switch">
-                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheck" value="true">
+                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault" [checked]="userLink.active === true" value="{{userLink.active}}" />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row ">
-                                    <div class="col-8 ">
-                                        <div class="form-floating ">
-                                            <input formControlName="link_url" type="url " class="form-control " id="floatingUrl " placeholder="Enlace" autocomplete="off">
-                                            <label for="floatingUrl ">{{userLink.link_url}} <i class="bi bi-pencil text-muted mx-2 "></i></label>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="form-floating">
+                                            <input formControlName="link_url" type="url" class="form-control" id="floatingUrl" placeholder="Enlace" autocomplete="off" value="{{userLink.link_url}}" />
+                                            <label for=" floatingUrl ">{{userLink.link_url}}<i class="bi bi-pencil text-muted mx-2"></i></label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -117,15 +112,15 @@
 </div>
 
 <!--Eliminate Link Modal-->
-<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="eliminarModal" tabindex="-1 " aria-labelledby="exampleModalLabel" aria-hidden="true ">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Eliminar Enlace</h5>
+                <h5 class="modal-title" id="exampleModalLabel ">Eliminar Enlace</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>¿Quieres eliminar el enlace <strong>{{userLink.label}}</strong>?</p>
+                <p>¿Quieres eliminar el enlace <strong>{{ userLink.label }}</strong>?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -135,7 +130,7 @@
     </div>
 </div>
 <!--Create Link Modal-->
-<div class="modal fade " id="createLinkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="createLinkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form [formGroup]="formLink">
@@ -150,36 +145,34 @@
                                 <div class="row">
                                     <div class="col-8">
                                         <div class="form-floating mb-3">
-                                            <input formControlName="label" type="text" class="form-control" id="floatingInput" placeholder="placeholder" autocomplete="off">
-                                            <label for="floatingInput ">Nombre<i class="bi bi-tag text-muted mx-2 "></i></label>
+                                            <input formControlName="label" type="text" class="form-control" id="floatingInput" placeholder="placeholder" autocomplete="off" />
+                                            <label for="floatingInput">Nombre<i class="bi bi-tag text-muted mx-2"></i></label>
                                         </div>
                                     </div>
-                                    <div class="col-4 ">
+                                    <div class="col-4">
                                         <div class="form-check form-switch">
-                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheck" value="active">
+                                            <input formControlName="active " class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault" value="true" checked />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row ">
-                                    <div class="col-8 ">
-                                        <div class="form-floating ">
-                                            <input formControlName="link_url" type="url " class="form-control " id="floatingUrl " placeholder="Enlace" autocomplete="off">
-                                            <label for="floatingUrl ">Enlace<i class="bi bi-link-45deg text-muted mx-2 "></i></label>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="form-floating">
+                                            <input formControlName="link_url" type="url" class="form-control" id="floatingUrl" placeholder="Enlace" autocomplete="off" />
+                                            <label for="floatingUrl ">Enlace<i class="bi bi-link-45deg text-muted mx-2"></i></label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeCreateLink">Cerrar</button>
+                    <button type="button " class="btn btn-secondary" data-bs-dismiss="modal" id="closeCreateLink">Cerrar</button>
                     <button (click)="createLink()" type="button" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
-    <notifier-container></notifier-container>
 </div>
-<!--(focusout)="updateLink(item.id)"-->
+<notifier-container></notifier-container>
