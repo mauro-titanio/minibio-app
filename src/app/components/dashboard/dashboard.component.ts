@@ -1,5 +1,5 @@
 import { formatCurrency } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
 
   reg = '(https?://)?([\da-z.-]+)\.([a-z.]{2,6})[/\w .-]*/?';
 
-
+   
 
 
 
@@ -95,7 +95,9 @@ export class DashboardComponent implements OnInit {
       this.crudLinks.newLink(link, this.user.uid).then(success => {
         console.log("Post creado", success)
         this.notifier.notify('success', 'Enlace creado');
+        
         this.readAllLinks()
+        
       
       }).catch(error => {
         console.log("Error", error)

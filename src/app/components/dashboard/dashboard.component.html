@@ -68,6 +68,7 @@
 
 
 <!-- Modal -->
+<!--Modify Link Modal-->
 <div class="modal fade " id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -115,7 +116,7 @@
     </div>
 </div>
 
-
+<!--Eliminate Link Modal-->
 <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -133,7 +134,7 @@
         </div>
     </div>
 </div>
-
+<!--Create Link Modal-->
 <div class="modal fade " id="createLinkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -173,16 +174,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeCreateLink">Cerrar</button>
                     <button (click)="createLink()" type="button" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
+    <notifier-container></notifier-container>
 </div>
 <!--(focusout)="updateLink(item.id)"-->
-
-
-
-
-<notifier-container></notifier-container>
