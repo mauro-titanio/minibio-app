@@ -11,6 +11,8 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotifierModule } from 'angular-notifier';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 
 
 
@@ -37,6 +39,8 @@ import { NotifierModule } from 'angular-notifier';
       }
      
     }),
+     FormlyModule.forRoot({ extras: { lazyRender: true } }),
+     FormlyBootstrapModule,
 
   ],
   providers: [AuthService],
