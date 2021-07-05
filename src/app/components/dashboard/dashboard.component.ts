@@ -1,8 +1,8 @@
 import { formatCurrency } from '@angular/common';
-import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotifierService } from 'angular-notifier';
 
 import { Link } from 'src/app/shared/models/link';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
 
 
 
-  formCreateLink: FormGroup
+
   formLink: FormGroup
   user: any
   userLinks: Array<Link> = []
@@ -27,10 +27,12 @@ export class DashboardComponent implements OnInit {
     author: '',
     label: '',
     link_url: '',
-    active: false,
+    active: '',
     date: 0,
   }
   pageLoaded = false
+
+  reg = '(https?://)?([\da-z.-]+)\.([a-z.]{2,6})[/\w .-]*/?';
 
 
 
@@ -40,30 +42,21 @@ export class DashboardComponent implements OnInit {
   constructor(private authService: AuthService,
     private fire: AngularFirestore,
     private crudLinks: LinksCrudService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private readonly notifier: NotifierService) {
 
-    const reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+    
     this.formLink = this.fb.group({
-      label: ['', Validators.required],
-      link_url: ['', [Validators.required, Validators.pattern(reg)]],
-      active: [null, Validators.required]
+      label: ['', Validators.required, Validators.minLength(3), Validators.maxLength(30)],
+      link_url: ['', [Validators.required, Validators.pattern(this.reg)]],
+      active: ['']
     })
-    this.formCreateLink = this.fb.group({
-      label: ['', Validators.required],
-      link_url: ['', [Validators.required, Validators.pattern(reg)]],
-      active: [null, Validators.required]
-    })
-
-
-
-
+    
   }
   get f() {
     return this.formLink.controls
   }
-  get t() {
-    return this.formLink.controls
-  }
+
 
 
   ngOnInit(): void {
@@ -87,17 +80,28 @@ export class DashboardComponent implements OnInit {
     const link: Link = {
       id: '',
       author: this.user.uid,
-      label: this.t.label.value,
-      link_url: this.t.link_url.value,
-      active: true,
+      label: this.f.label.value,
+      link_url: this.f.link_url.value,
+      active: 'active',
       date: new Date().getTime()
     }
-    this.crudLinks.newLink(link, this.user.uid).then(success => {
-      console.log("Post creado", success)
-      this.readAllLinks()
-    }).catch(error => {
-      console.log("Error", error)
-    })
+    
+    if (this.formLink.invalid) {
+      console.log("error!")
+      this.notifier.notify('error', 'El enlace no es válido');
+    
+      return
+    } else {
+      this.crudLinks.newLink(link, this.user.uid).then(success => {
+        console.log("Post creado", success)
+        this.notifier.notify('success', 'Enlace creado');
+        this.readAllLinks()
+      
+      }).catch(error => {
+        console.log("Error", error)
+        this.notifier.notify('error', 'Ha habido un error en el servidor');
+      })
+    }
   }
 
 
@@ -137,9 +141,11 @@ export class DashboardComponent implements OnInit {
   deleteLink(id: any) {
     this.crudLinks.deleteLink(this.user.uid, id).then(success => {
       console.log("Se ha eliminado")
+      this.notifier.notify('success', 'Enlace eliminado');
       this.readAllLinks()
     }).catch(error => {
       console.log("Error", error)
+      this.notifier.notify('error', 'Ha habido un error en el servidor');
     })
   }
 
@@ -151,18 +157,22 @@ export class DashboardComponent implements OnInit {
       author: this.user.uid,
       label: this.f.label.value,
       link_url: this.f.link_url.value,
-      active: true,
+      active: this.f.active.value,
       date: new Date().getTime(),
     }
-    this.crudLinks.updateLink(this.user.uid, link, id).then(success => {
-      console.log("Post creado", success)
-      console.log(link)
-      this.readAllLinks()
-    }).catch(error => {
-      console.log("Error", error)
-
-    })
-
+    if (this.formLink.invalid) {
+      console.log("error!")
+      return
+    } else {
+      this.crudLinks.updateLink(this.user.uid, link, id).then(success => {
+        this.notifier.notify('success', 'Enlace actualizado');
+        console.log("Post creado", success)
+        this.readAllLinks()
+      }).catch(error => {
+        console.log("Error", error)
+        this.notifier.notify('error', 'Ha habido un error en el servidor');
+      })
+    }
   }
 
 

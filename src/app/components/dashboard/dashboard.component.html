@@ -34,7 +34,7 @@
                                     </div>
                                     <div class="col-4 ">
                                         <div class="container ">
-                                            <i class="bi bi-pencil position-absolute top-0 end-0 m-3 text-muted pointer" (click)="getLink(link.id)" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
+                                            <i class="bi bi-pencil position-absolute top-0 end-0 m-3 text-muted pointer" (click)="getLink(link.id)" data-bs-toggle="modal" data-bs-target="#modifyModal"></i>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -68,7 +68,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade " id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form [formGroup]="formLink">
@@ -89,7 +89,7 @@
                                     </div>
                                     <div class="col-4 ">
                                         <div class="form-check form-switch">
-                                            <input checked formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheck" value="">
+                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheck" value="true">
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button (click)="updateLink(userLink.id)" type="button" class="btn btn-primary" data-bs-dismiss="modal">Actualizar</button>
+                    <button (click)="updateLink(userLink.id)" type="button" class="btn btn-primary">Actualizar</button>
                 </div>
             </form>
         </div>
@@ -128,7 +128,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteLink(userLink.id)">Eliminar</button>
             </div>
         </div>
     </div>
@@ -137,7 +137,7 @@
 <div class="modal fade " id="createLinkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form [formGroup]="formCreateLink">
+            <form [formGroup]="formLink">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Crear enlace</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -155,7 +155,7 @@
                                     </div>
                                     <div class="col-4 ">
                                         <div class="form-check form-switch">
-                                            <input checked formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheck" value="">
+                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheck" value="active">
                                         </div>
                                     </div>
                                 </div>
@@ -166,11 +166,6 @@
                                             <label for="floatingUrl ">Enlace<i class="bi bi-link-45deg text-muted mx-2 "></i></label>
                                         </div>
                                     </div>
-                                    <div class="col-4 ">
-                                        <div class="container ">
-                                            <i class="bi bi-trash position-absolute bottom-0 end-0 m-3 text-muted " (click)="deleteLink(userLink.id)"></i>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -179,10 +174,15 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button (click)="createLink()" type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar</button>
+                    <button (click)="createLink()" type="button" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <!--(focusout)="updateLink(item.id)"-->
+
+
+
+
+<notifier-container></notifier-container>

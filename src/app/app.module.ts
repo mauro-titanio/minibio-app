@@ -11,6 +11,8 @@ import { AuthService } from './shared/services/auth/auth.service';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NotifierModule } from 'angular-notifier';
+
 
 
 @NgModule({
@@ -29,7 +31,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
 
-  
+    NotifierModule.withConfig({
+      position:{
+        horizontal:{
+          position: 'right'
+        }
+      }
+     
+    }),
+
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]
