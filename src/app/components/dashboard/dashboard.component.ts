@@ -82,6 +82,7 @@ export class DashboardComponent implements OnInit {
         console.log("Post creado", success)
         this.notifier.notify('success', 'Enlace creado');
         this.readAllLinks()
+        this.formLink = this.fb.group({})
       }).catch(error => {
         console.log("Error", error)
         this.notifier.notify('error', 'Ha habido un error en el servidor');
@@ -128,12 +129,20 @@ export class DashboardComponent implements OnInit {
       console.log("Error", error)
       this.notifier.notify('error', 'Ha habido un error en el servidor');
     })
+    this.userLink = {
+      id: '',
+      author: '',
+      label: '',
+      link_url: '',
+      active: true,
+      date: 0,
+    }
   }
 
 
 //Hay un error en el update
   updateLink(id: string) {
-    const link: Link = {
+    let link: Link = {
       id: id,
       author: this.user.uid,
       label: this.f.label.value,
@@ -150,10 +159,20 @@ export class DashboardComponent implements OnInit {
         this.notifier.notify('success', 'Enlace actualizado');
         console.log("Post creado", success)
         this.readAllLinks()
+        this.userLink = {
+          id: '',
+          author: '',
+          label: '',
+          link_url: '',
+          active: true,
+          date: 0,
+        }
+        this.formLink = this.fb.group({})
       }).catch(error => {
         this.notifier.notify('error', 'Ha habido un error en el servidor');
         console.log("Error", error)
       })
+    
   }
 
 
