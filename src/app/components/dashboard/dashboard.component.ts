@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 
-import { Observable } from 'rxjs';
 import { Link } from 'src/app/shared/models/link';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LinksCrudService } from 'src/app/shared/services/crud/links-crud.service';
@@ -19,8 +18,8 @@ export class DashboardComponent implements OnInit {
 
 
 
-
-
+  formCreateLink: FormGroup
+  formLink: FormGroup
   user: any
   userLinks: Array<Link> = []
   userLink: Link = {
@@ -29,32 +28,57 @@ export class DashboardComponent implements OnInit {
     label: '',
     link_url: '',
     active: false,
+    date: 0,
   }
-  form = this.fb.group({})
+  pageLoaded = false
 
 
 
-  get linksForm() {
-    return this.form.get('linksForm') as FormArray
-  }
+
 
 
   constructor(private authService: AuthService,
     private fire: AngularFirestore,
     private crudLinks: LinksCrudService,
     private fb: FormBuilder) {
-      this.readAllLinks()
+
+    const reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+    this.formLink = this.fb.group({
+      label: ['', Validators.required],
+      link_url: ['', [Validators.required, Validators.pattern(reg)]],
+      active: [null, Validators.required]
+    })
+    this.formCreateLink = this.fb.group({
+      label: ['', Validators.required],
+      link_url: ['', [Validators.required, Validators.pattern(reg)]],
+      active: [null, Validators.required]
+    })
+
+
+
+
+  }
+  get f() {
+    return this.formLink.controls
+  }
+  get t() {
+    return this.formLink.controls
   }
 
 
   ngOnInit(): void {
     this.user = this.authService.userData()
     console.log(this.user)
-  
+    this.readAllLinks()
+    setTimeout(() => {
+      this.pageLoaded = true
+    }, 3000);
+
+
   }
 
 
-  //Crear un nuevo formgroup en el form array
+
 
 
 
@@ -62,17 +86,18 @@ export class DashboardComponent implements OnInit {
   createLink(): void {
     const link: Link = {
       id: '',
-      author: '',
-      label: '',
-      link_url: '',
-      active: false,
+      author: this.user.uid,
+      label: this.t.label.value,
+      link_url: this.t.link_url.value,
+      active: true,
+      date: new Date().getTime()
     }
     this.crudLinks.newLink(link, this.user.uid).then(success => {
       console.log("Post creado", success)
+      this.readAllLinks()
     }).catch(error => {
       console.log("Error", error)
     })
-    this.readAllLinks()
   }
 
 
@@ -86,19 +111,22 @@ export class DashboardComponent implements OnInit {
           let userLink: Link = doc.data()
           userLink.id = doc.id
           this.userLinks.push(userLink)
-          //Tengo que arreglar algo: cuando imprimo los "userLinks" hay muchos arrays, será por el forEach
-          console.log(this.userLinks)
+          this.userLinks.sort(function (a, b) {
+            return b.date - a.date;
+
+          });
         })
       })
-    }, 150);
+    }, 50);
+
   }
 
 
   getLink(id: string) {
- //////FILTER?
-
-    this.crudLinks.getLink(this.user.uid, id).subscribe((data:any)=>{
+    this.crudLinks.getLink(this.user.uid, id).subscribe((data: any) => {
       this.userLink = data.data()
+      this.userLink.id = data.id
+      console.log(data.id)
       console.log(this.userLink)
     })
   }
@@ -124,18 +152,19 @@ export class DashboardComponent implements OnInit {
       label: this.f.label.value,
       link_url: this.f.link_url.value,
       active: true,
+      date: new Date().getTime(),
     }
     this.crudLinks.updateLink(this.user.uid, link, id).then(success => {
       console.log("Post creado", success)
+      console.log(link)
+      this.readAllLinks()
     }).catch(error => {
       console.log("Error", error)
+
     })
-    this.readAllLinks()
+
   }
 
-  get f() {
-    return this.form.controls
-  }
 
 
 

@@ -12,6 +12,7 @@ $btn-border-radius-lg: 2rem;
 $btn-padding-x: 1.3rem;
 $btn-padding-y: 0.5rem;
 $input-btn-border-width: 0;
+$modal-transition: transform 4s ease;
 @import './node_modules/bootstrap/scss/bootstrap.scss';
 * {
     box-sizing: border-box;
@@ -83,4 +84,8 @@ input,
 button {
     outline: none !important;
     outline-width: 0 !important;
+}
+
+.pointer {
+    cursor: pointer !important;
 }
