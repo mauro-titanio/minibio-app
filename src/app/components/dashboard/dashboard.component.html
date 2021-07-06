@@ -7,7 +7,7 @@
                 <img width="60px" class="rounded-circle border border-2 border-secondary profile-img mx-5" data-bs-toggle="dropdown" aria-expanded="false" src="{{ user.photoURL }}" alt="User profile image" />
                 <ul class="dropdown-menu bg-glass mt-2" aria-labelledby="dropdownMenuButton1">
                     <li>
-                        <a class="dropdown-item text-secondary" routerLink="/bio/{{user.displayName}}/{{miniBio.title}}">Perfil</a></li>
+                        <a class="dropdown-item text-secondary" routerLink="/bio/{{user.uid}}/{{miniBio.id}}">Perfil</a></li>
                     <li>
                         <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
                     </li>
