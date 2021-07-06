@@ -7,7 +7,7 @@
                 <img width="60px" class="rounded-circle border border-2 border-secondary profile-img mx-5" data-bs-toggle="dropdown" aria-expanded="false" src="{{ user.photoURL }}" alt="User profile image" />
                 <ul class="dropdown-menu bg-glass mt-2" aria-labelledby="dropdownMenuButton1">
                     <li>
-                        <a class="dropdown-item text-secondary" routerLink="/bio/{{user.displayName}}/{{user.user_links}}">Perfil</a></li>
+                        <a class="dropdown-item text-secondary" routerLink="/bio/{{user.displayName}}/{{miniBio.title}}">Perfil</a></li>
                     <li>
                         <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
                     </li>
@@ -16,6 +16,15 @@
         </div>
     </nav>
 
+
+
+
+
+
+
+    <button (click)="createMinibio()" *ngIf="myMinibios.length === 0 && pageLoaded">Minibio</button>
+
+    <!--      
 
     <!--LINKS CONTAINER-->
     <div class="row justify-content-center align-content-center vh-70" *ngIf="!pageLoaded">
@@ -59,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            <!--Vista previa de los enlace (añadir movil)   iframe o componente-->
+            <!--Vista previa de los enlace (añadir movil)   iframe o component-->
             <div class="col-lg-4 preview-col">
                 <div class="container">
                     <div class="movil-container container">
@@ -68,7 +77,7 @@
                                 <div class="container image-container text-center d-block">
                                     <img width="60px" class="rounded-circle border border-2 border-primary  mx-auto" src="{{ user.photoURL }}" alt="User profile image" />
                                     <h5 class="mb-0 mt-1">{{user.displayName}}</h5>
-                                    <small>User description</small>
+                                    <small>{{miniBio.description}}</small>
                                 </div>
                                 <div class="links-preview mt-4">
                                     <ul class="list-group list-group-flush">
@@ -198,11 +207,3 @@
     </div>
 </div>
 <notifier-container></notifier-container>
-
-<!--[ngClass]="{'show': !createLinkModalClosed}" [style.display]="!createLinkModalClosed ? 'block': 'none'"
-
-
-How to bind aria-model???
-
-
--->

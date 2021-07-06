@@ -1,12 +1,12 @@
-import { formatCurrency } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
 
 import { Link } from 'src/app/shared/models/link';
+import { Minibio } from 'src/app/shared/models/minibio';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LinksCrudService } from 'src/app/shared/services/crud/links-crud.service';
+import { MinibioCrudService } from 'src/app/shared/services/crud/minibio-crud.service';
 
 
 @Component({
@@ -30,12 +30,35 @@ export class DashboardComponent implements OnInit {
   pageLoaded = false
   createLinkModalClosed = true
   linksActives: Array<Link> | undefined
-
+  myMinibios: Array<Minibio> = []
+  miniBio: Minibio = {
+    id: '',
+    author: '',
+    description: '',
+    date: 0,
+    title: '',
+  }
+  hide = true
 
   constructor(private authService: AuthService,
     private crudLinks: LinksCrudService,
+    private crudMinibio: MinibioCrudService,
     private fb: FormBuilder,
     private notifier: NotifierService) {
+
+    setTimeout(() => {
+      this.readMinibios()
+      if (this.myMinibios.length === 0) {
+        this.readMinibios()
+      }
+    }, 20);
+
+    setTimeout(() => {
+      this.pageLoaded = true
+    }, 2800);
+
+
+
 
     const reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
     this.formLink = this.fb.group({
@@ -43,19 +66,60 @@ export class DashboardComponent implements OnInit {
       linkUrl: ['', [Validators.required, Validators.pattern(reg)]],
       active: [true, Validators.required]
     })
-
   }
+
+
+  
+  createMinibio() {
+    const minibio: Minibio = {
+      id: '',
+      author: this.user.uid,
+      description: '',
+      date: new Date().getTime(),
+      title: this.user.displayName,
+    }
+    this.crudMinibio.newMinibio(minibio, this.user.uid).then(success => {
+      console.log("Post creado", success)
+    }).catch(error => {
+      console.log("Error", error)
+    })
+    this.readMinibios()
+  }
+
+  readMinibios() {
+    setTimeout(() => {
+      this.crudMinibio.readAllMinibio(this.user.uid).subscribe(data => {
+        this.myMinibios = []
+        data.forEach((doc: any) => {
+          let miniBio: Minibio = doc.data()
+          miniBio.id = doc.id
+          this.myMinibios.push(miniBio)
+        })
+      })
+      setTimeout(() => {
+        this.getMinibio()
+      }, 1000);
+      setTimeout(() => {
+        this.readAllLinks()
+      }, 1000);
+    }, 200);
+  }
+
+  getMinibio() {
+    this.crudMinibio.getMinibio(this.user.uid, this.myMinibios[0].id).subscribe((data: any) => {
+      this.miniBio = data.data()
+      this.miniBio.id = data.id
+    })
+  }
+
+
+
+
 
 
 
   ngOnInit(): void {
     this.user = this.authService.userData()
-    console.log(this.user)
-    this.readAllLinks()
-    setTimeout(() => {
-      this.pageLoaded = true
-    }, 100);
-    console.log(this.linksActives)
   }
 
 
@@ -63,7 +127,7 @@ export class DashboardComponent implements OnInit {
     return this.formLink.controls
   }
 
- 
+
 
   createLink(): void {
     const link: Link = {
@@ -88,7 +152,7 @@ export class DashboardComponent implements OnInit {
       this.notifier.notify('error', 'El enlace ya existe');
       return
     }
-    this.crudLinks.newLink(link, this.user.uid).then(success => {
+    this.crudLinks.newLink(link, this.myMinibios[0].id, this.user.uid).then(success => {
       console.log("Post creado", success)
       this.notifier.notify('success', 'Enlace creado');
       this.readAllLinks()
@@ -103,7 +167,7 @@ export class DashboardComponent implements OnInit {
 
   readAllLinks() {
     setTimeout(() => {
-      this.crudLinks.readAllLinks(this.user.uid).subscribe(data => {
+      this.crudLinks.readAllLinks(this.user.uid, this.myMinibios[0].id).subscribe(data => {
         this.userLinks = []
         data.forEach((doc: any) => {
           let userLink: Link = doc.data()
@@ -121,10 +185,9 @@ export class DashboardComponent implements OnInit {
 
 
   getLink(id: string) {
-    this.crudLinks.getLink(this.user.uid, id).subscribe((data: any) => {
+    this.crudLinks.getLink(this.user.uid, this.myMinibios[0].id, id).subscribe((data: any) => {
       this.userLink = data.data()
       this.userLink.id = data.id
-      console.log("Esto es userLink: ", this.userLink)
       this.formLink.patchValue({
         label: this.userLink.label,
         linkUrl: this.userLink.link_url,
@@ -136,22 +199,13 @@ export class DashboardComponent implements OnInit {
 
 
   deleteLink(id: any) {
-    this.crudLinks.deleteLink(this.user.uid, id).then(success => {
-      console.log("Se ha eliminado ",this.userLink)
+    this.crudLinks.deleteLink(this.user.uid, this.myMinibios[0].id, id).then(success => {
       this.notifier.notify('success', 'Enlace eliminado');
       this.readAllLinks()
     }).catch(error => {
       console.log("Error", error)
       this.notifier.notify('error', 'Ha habido un error en el servidor');
     })
-  /*  this.userLink = {
-      id: '',
-      author: '',
-      label: '',
-      link_url: '',
-      active: true,
-      date: 0,
-    }*/
   }
 
 
@@ -160,7 +214,6 @@ export class DashboardComponent implements OnInit {
 
   //Hay un error en el update
   updateLink(id: string) {
-    console.log("El estado es este" , this.f.active.value)
     let link: Link = {
       id: id,
       author: this.user.uid,
@@ -174,19 +227,19 @@ export class DashboardComponent implements OnInit {
       console.log("error!")
       return
     }
-    this.crudLinks.updateLink(this.user.uid, link, id).then(success => {
+    this.crudLinks.updateLink(this.user.uid,this.myMinibios[0].id, link, id).then(success => {
       this.notifier.notify('success', 'Enlace actualizado');
       console.log("Post creado", success)
       this.readAllLinks()
-      /* this.userLink = {
-         id: '',
-         author: '',
-         label: '',
-         link_url: '',
-         active: true,
-         date: 0,
-       }*/
-      
+      this.userLink = {
+        id: '',
+        author: '',
+        label: '',
+        link_url: '',
+        active: true,
+        date: 0,
+      }
+
     }).catch(error => {
       this.notifier.notify('error', 'Ha habido un error en el servidor');
       console.log("Error", error)
