@@ -4,4 +4,5 @@ export interface Link {
     label: string;
     link_url: string;
     active: boolean;
+    date: number
 }
