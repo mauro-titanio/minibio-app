@@ -37,7 +37,9 @@ deleteLink(userID:string, linkID:string){
   return this.fireStore.collection('users').doc(userID).collection('user_links').doc(linkID).delete()
 }
 
-
+getMiniBio(id:string){
+  return this.fireStore.collection('users').doc(id).collection('miniBio').get()
+}
 
 
 

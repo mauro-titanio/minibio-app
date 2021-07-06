@@ -6,7 +6,8 @@
             <div class="dropdown">
                 <img width="60px" class="rounded-circle border border-2 border-secondary profile-img mx-5" data-bs-toggle="dropdown" aria-expanded="false" src="{{ user.photoURL }}" alt="User profile image" />
                 <ul class="dropdown-menu bg-glass mt-2" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item text-secondary">Perfil</a></li>
+                    <li>
+                        <a class="dropdown-item text-secondary" routerLink="/bio/{{user.displayName}}/{{user.user_links}}">Perfil</a></li>
                     <li>
                         <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
                     </li>
@@ -59,7 +60,27 @@
                 </div>
             </div>
             <!--Vista previa de los enlace (añadir movil)   iframe o componente-->
-            <div class="col-lg-4">Espacio para vista previa</div>
+            <div class="col-lg-4 preview-col">
+                <div class="container">
+                    <div class="movil-container container">
+                        <div class="col-lg-12">
+                            <div class="container px-0 movil-display overflow-scroll">
+                                <div class="container image-container text-center d-block">
+                                    <img width="60px" class="rounded-circle border border-2 border-primary  mx-auto" src="{{ user.photoURL }}" alt="User profile image" />
+                                    <h5 class="mb-0 mt-1">{{user.displayName}}</h5>
+                                    <small>User description</small>
+                                </div>
+                                <div class="links-preview mt-4">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item text-center mb-2 rounded-pill" *ngFor="let linkActive of linksActives">{{linkActive.label}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -87,14 +108,14 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="form-check form-switch">
-                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault" [checked]="userLink.active === true" value="{{userLink.active}}" />
+                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-8">
                                         <div class="form-floating">
-                                            <input formControlName="link_url" type="url" class="form-control" id="floatingUrl" placeholder="Enlace" autocomplete="off" value="{{userLink.link_url}}" />
+                                            <input formControlName="linkUrl" type="url" class="form-control" id="floatingUrl" placeholder="Enlace" autocomplete="off" value="{{userLink.link_url}}" />
                                             <label for=" floatingUrl ">{{userLink.link_url}}<i class="bi bi-pencil text-muted mx-2"></i></label>
                                         </div>
                                     </div>
@@ -152,14 +173,14 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="form-check form-switch">
-                                            <input formControlName="active " class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault" value="true" checked />
+                                            <input formControlName="active" class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" id="flexSwitchCheckDefault" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-8">
                                         <div class="form-floating">
-                                            <input formControlName="link_url" type="url" class="form-control" id="floatingUrl" placeholder="Enlace" autocomplete="off" />
+                                            <input formControlName="linkUrl" type="url" class="form-control" id="floatingUrl" placeholder="Enlace" autocomplete="off" />
                                             <label for="floatingUrl ">Enlace<i class="bi bi-link-45deg text-muted mx-2"></i></label>
                                         </div>
                                     </div>
@@ -177,3 +198,11 @@
     </div>
 </div>
 <notifier-container></notifier-container>
+
+<!--[ngClass]="{'show': !createLinkModalClosed}" [style.display]="!createLinkModalClosed ? 'block': 'none'"
+
+
+How to bind aria-model???
+
+
+-->

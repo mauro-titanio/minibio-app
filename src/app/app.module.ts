@@ -11,6 +11,7 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotifierModule } from 'angular-notifier';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 
@@ -19,6 +20,7 @@ import { NotifierModule } from 'angular-notifier';
     AppComponent,
     SignInComponent,
     DashboardComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
