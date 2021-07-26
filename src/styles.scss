@@ -15,6 +15,7 @@ $input-btn-border-width: 0;
 @import './node_modules/bootstrap/scss/bootstrap.scss';
 * {
     box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 html,
